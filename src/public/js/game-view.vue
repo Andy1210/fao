@@ -240,7 +240,7 @@ export default {
 		},
 		isRoundOver() {
 			return (
-				this.gameState.phase === GAME_PHASE.VOTE || this.gameState.phase === GAME_PHASE.END
+				this.gameState.phase === GAME_PHASE.END
 			);
 		},
 		actionsEnabled() {
@@ -396,7 +396,7 @@ export default {
 		},
 		checkGameState() {
 			if (this.gameState.phase === GAME_PHASE.VOTE) {
-				this.showDialog(Dialogs.VOTE);
+				setTimeout(() => this.showDialog(Dialogs.VOTE), 3000);
 			}
 			if (this.gameState.phase === GAME_PHASE.END) {
 				this.showDialog(Dialogs.END);
