@@ -1,10 +1,10 @@
 <template>
 	<dialog-component id="vote-dialog">
 		<div v-show="!isTurnEnd">
-			<h2>Szavazz, hogy ki a Fake Artist:</h2>
+			<h2>Szavazz, hogy ki a Hamis Művész:</h2>
 		</div>
 		<div v-show="isTurnEnd">
-			<h2>Eredény:</h2>
+			<h2>Eredmény:</h2>
 		</div>
 		<div v-show="!isTurnEnd">
 			<PlayerListForVote

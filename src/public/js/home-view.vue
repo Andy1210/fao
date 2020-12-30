@@ -3,7 +3,7 @@
 		<div class="view-container">
 			<div id="title-banner" class="stripe align-center">
 				<div class="stripe-content">
-					<h1 class="title">Fake Artist Online</h1>
+					<h1 class="title">Hamis Művész Online</h1>
 				</div>
 			</div>
 			<div class="stripe flex-center">

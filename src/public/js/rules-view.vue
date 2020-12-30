@@ -4,32 +4,28 @@
 			<div class="stripe">
 				<div id="rules-content" class="stripe-content normal-text">
 					<div class="align-left">
-						<h2>Rules</h2>
+						<h2>Szabályzat</h2>
 					</div>
 					<div class="align-left">
 						<p>
-							A group of players must work together to find the one
-							<strong>fake artist</strong> among them, while that player tries to
-							avoid detection.
+							A játékosoknak együtt kell dolgozniuk, hogy megtalálják maguk között a 
+							<strong>hamis művészt</strong>, míg ez a játékos megpróbálja elkerülni a lebukást.
 						</p>
 						<p>
-							Each round, players see the round's random keyword and its category,
-							e.g. <span>"Food: Apple".</span>
+							A játékosok minden körben látják a véletlenszerű kulcsszót és a hozzá tartozó kategóriát, pl.: <span>"Étel/Ital: Alma".</span>
 						</p>
 						<p>
-							But the fake artist <em>only</em> sees the category, e.g. "Food: ???".
+							A hamis művész azonban <em>csak</em> a kategóriát látja, pl.: "Étel/Ital: ???".
 						</p>
 						<p>
-							Players take turns drawing single strokes on a drawing pad. After
-							everyone has drawn twice, everyone votes on who they think the fake
-							artist is.
+							A játékosok felváltva rajzolnak a vászonra, egyszerre csak egy ecsetvonással. Miután mindenki kétszer sorra került, a játékosok szavaznak, hogy szerintük ki a hamis művész.
 						</p>
 						<p>
-							The fake artist wins if they don't get the majority vote.
+							A hamis művész nyer, ha nem ő kapja a többségi szavazatot.
 						</p>
 						<p>
-							But even if the fake artist gets caught, they get one chance to guess
-							the keyword. If they guess correctly, <em>they still win!</em>
+							Ha el is kapják a hamis művészt, ő tippelhet egyszer a kulcsszóra.
+							Ha eltalálja, <em>nyer!</em>
 						</p>
 					</div>
 					<div class="align-right">

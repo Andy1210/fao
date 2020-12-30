@@ -3,7 +3,7 @@
 		<div class="view-container">
 			<Confirmation
 				id="confirm-leave"
-				confirmText="Leave"
+				confirmText="Kilépés"
 				v-show="leaveConfirmationDialogVisible"
 				@close="leaveConfirmationDialogVisible = false"
 				@confirm="leave"
