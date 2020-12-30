@@ -2,16 +2,14 @@
 	<div id="home-menu" class="flex-center">
 		<div id="first-prompt-menu" class="menu" v-show="tab === 'main'">
 			<button id="goto-create-menu" class="btn big primary" @click="setTab('create')">
-				New Game
+				Új játék
 			</button>
 			<div style="clear: both"></div>
 			<button id="goto-join-menu" class="btn big primary" @click="setTab('join')">
-				Join Game
+				Csatlakozás
 			</button>
 			<div style="clear: both"></div>
-			<button class="btn big secondary" @click="gotoRules()">Rules</button>
-			<div style="clear: both"></div>
-			<button class="btn big secondary" @click="gotoFaq()">Faq</button>
+			<button class="btn big secondary" @click="gotoRules()">Szabályzat</button>
 		</div>
 
 		<div id="create-game-menu" class="menu" v-show="tab === 'create'">
@@ -23,7 +21,7 @@
 					type="text"
 					id="create-username-input"
 					class="username-input"
-					placeholder="Username"
+					placeholder="Felhasználónév"
 					required
 					autocomplete="off"
 					v-model="store.username"
@@ -37,7 +35,7 @@
 						class="btn tertiary"
 						@click="setTab('main')"
 					>
-						Back
+						Vissza
 					</button>
 					<button
 						type="submit"
@@ -46,7 +44,7 @@
 						value=""
 						:disabled="!Boolean(store.username)"
 					>
-						Create
+						Létrehozás
 					</button>
 				</div>
 			</form>
@@ -61,7 +59,7 @@
 					type="text"
 					id="join-username-input"
 					class="username-input"
-					placeholder="Username"
+					placeholder="Felhasználónév"
 					required
 					autocomplete="off"
 					v-model="store.username"
@@ -71,7 +69,7 @@
 				<input
 					type="tel"
 					id="join-code"
-					placeholder="Game Code"
+					placeholder="Szoba kód"
 					required
 					autocomplete="off"
 					v-model="store.roomCode"
@@ -84,7 +82,7 @@
 						class="btn tertiary"
 						@click="setTab('main')"
 					>
-						Back
+						Vissza
 					</button>
 					<button
 						type="submit"
@@ -92,7 +90,7 @@
 						class="btn primary"
 						:disabled="!Boolean(store.username && store.roomCode)"
 					>
-						Join
+						Csatlakozás
 					</button>
 				</div>
 			</form>

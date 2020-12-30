@@ -8,35 +8,38 @@
 				@close="leaveConfirmationDialogVisible = false"
 				@confirm="leave"
 			>
-				<h2>Leave game?</h2>
+				<h2>Kilépés?</h2>
 				<div class="normal-text">
-					<p>Are you sure you want to leave this game?</p>
+					<p>Biztos, hogy kilépsz a játékból?</p>
 				</div>
 			</Confirmation>
 			<Confirmation
 				id="confirm-start"
-				confirmText="Start"
+				confirmText="Indítás"
 				v-show="startConfirmationDialogVisible"
 				@close="startConfirmationDialogVisible = false"
 				@confirm="start"
 			>
-				<h2>Start game?</h2>
+				<h2>Új játék?</h2>
 				<div class="normal-text">
-					<p>Additional players won't be able to join while a game is in progress.</p>
-					<p>To add more players later, choose the "Exit to Setup" menu option.</p>
+					<p>Amíg a játék tart, nem tudnak csatlakozni új játékosok.</p>
+					<p>
+						Játékosok hozzáadásához később válaszd a "Kilépés a létrehozás menübe"
+						lehetőséget.
+					</p>
 				</div>
 			</Confirmation>
 
 			<div class="stripe flex-center align-center game-code">
 				<div class="stripe-content">
-					<div id="setup-header">Your game code is:</div>
+					<div id="setup-header">Szoba kód:</div>
 					<h1>{{ roomCode }}</h1>
 				</div>
 			</div>
 
 			<div class="stripe flex-center align-center users">
 				<div class="stripe-content">
-					<div id="setup-header">Players:</div>
+					<div id="setup-header">Játékosok:</div>
 					<ul class="users">
 						<li v-for="username in usernames" :key="'0' + username">{{ username }}</li>
 					</ul>
@@ -46,11 +49,11 @@
 			<div class="stripe flex-center align-center actions">
 				<div class="stripe-content">
 					<button class="btn primary big" @click="startConfirmationDialogVisible = true">
-						Start Game
+						Játék indítása
 					</button>
 					<div style="clear: both" />
 					<button class="btn tertiary" @click="leaveConfirmationDialogVisible = true">
-						Leave
+						Kilépés
 					</button>
 				</div>
 			</div>

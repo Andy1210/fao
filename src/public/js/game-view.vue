@@ -13,10 +13,10 @@
 				@close="hideDialogs"
 				@confirm="nextRound"
 			>
-				<h2>Skip this Round?</h2>
+				<h2>Kör átugrása?</h2>
 				<div class="normal-text">
 					<p>
-						This will end the current round.
+						Azonnal véget vet a jelenlegi körnek.
 					</p>
 				</div>
 			</confirmation>
@@ -26,15 +26,21 @@
 				@close="hideDialogs"
 				@confirm="setup"
 			>
-				<h2>Exit to Setup?</h2>
+				<h2>Kilépés a létrehozás menübe?</h2>
 				<div class="normal-text">
 					<p>
-						Returning to setup will let you add/remove players. This will end the
-						current round.
+						Véget vet a jelenlegi játéknak, visszatérsz a szoba létrehozáshoz, ahol új
+						játékosok csatlakozhatnak.
 					</p>
 				</div>
 			</confirmation>
-			<!-- <vote-dialog v-show="currentDialog === 'VOTE'" @close="hideDialogs"></vote-dialog> -->
+			<vote-dialog
+				v-show="currentDialog === 'VOTE' || currentDialog === 'END'"
+				:isTurnEnd="currentDialog === 'END'"
+				:users="gameState.users"
+				v-on:vote="submitVote"
+				v-on:close="hideDialogs"
+			></vote-dialog>
 			<div class="stripe">
 				<div id="game-info" class="stripe-content canvas-aligned">
 					<h1 class="prompt" v-show="promptVisible">{{ promptText }}</h1>
@@ -65,7 +71,7 @@
 							v-show="isRoundOver"
 							:disabled="!isRoundOver"
 						>
-							New Round
+							Új kör
 						</button>
 						<button
 							class="btn primary submit-drawing"
@@ -73,7 +79,7 @@
 							v-show="!isRoundOver"
 							:disabled="!actionsEnabled"
 						>
-							Submit
+							Beküldés
 						</button>
 						<button
 							class="btn secondary undo-drawing"
@@ -81,7 +87,7 @@
 							v-show="!isRoundOver"
 							:disabled="!actionsEnabled"
 						>
-							Undo
+							Visszavonás
 						</button>
 					</div>
 					<div id="drawing-actions-left" class="fill-space">
@@ -113,7 +119,7 @@ import ConnectionOverlay from './connection-overlay';
 import GameMenu from './game-menu';
 import RoomInfo from './room-info';
 import Confirmation from './confirmation';
-// import VoteDialog from './vote-dialog';
+import VoteDialog from './vote-dialog';
 import drawingPad from './drawing-pad';
 import PlayerStatusesList from './player-statuses-list';
 
@@ -129,6 +135,7 @@ const Dialogs = {
 	SKIP_ROUND: 'SKIP_ROUND',
 	SETUP: 'SETUP',
 	VOTE: 'VOTE',
+	END: 'END',
 };
 
 const strokeTracker = {
@@ -183,6 +190,7 @@ export default {
 		ConnectionOverlay,
 		GameMenu,
 		RoomInfo,
+		VoteDialog,
 		Confirmation,
 		PlayerStatusesList,
 	},
@@ -216,15 +224,24 @@ export default {
 			return `${this.gameState.hint}: ${this.gameState.keyword}`;
 		},
 		whoseTurnText() {
-			return this.gameState.phase === GAME_PHASE.VOTE
-				? 'Time to vote!'
-				: `${this.gameState.whoseTurn}'s turn`;
+			switch (this.gameState.phase) {
+				case GAME_PHASE.VOTE:
+					return 'Ideje szavazni!';
+				case GAME_PHASE.PLAY:
+					return `${this.gameState.whoseTurn} következik`;
+				case GAME_PHASE.END:
+					return 'Vége a körnek';
+				default:
+					return '';
+			}
 		},
 		userColor() {
 			return this.gameState.getUserColor(this.gameState.whoseTurn);
 		},
 		isRoundOver() {
-			return this.gameState.phase === GAME_PHASE.VOTE;
+			return (
+				this.gameState.phase === GAME_PHASE.VOTE || this.gameState.phase === GAME_PHASE.END
+			);
 		},
 		actionsEnabled() {
 			return (
@@ -244,6 +261,7 @@ export default {
 		},
 		['gameState.phase']() {
 			this.menuItems = this.generateMenuOptions();
+			this.checkGameState();
 		},
 		['sfxDisabled']() {
 			this.menuItems = this.generateMenuOptions();
@@ -286,6 +304,11 @@ export default {
 
 				this.stroke.reset();
 				this.canvasState = CanvasState.SPECTATE;
+			}
+		},
+		submitVote(username) {
+			if (username) {
+				Store.submitVote(username);
 			}
 		},
 		nextRound() {
@@ -371,30 +394,38 @@ export default {
 		rules() {
 			Store.setView(VIEW.RULES);
 		},
+		checkGameState() {
+			if (this.gameState.phase === GAME_PHASE.VOTE) {
+				this.showDialog(Dialogs.VOTE);
+			}
+			if (this.gameState.phase === GAME_PHASE.END) {
+				this.showDialog(Dialogs.END);
+			}
+		},
 		generateMenuOptions() {
 			const nextRoundOption =
-				this.gameState.phase === GAME_PHASE.VOTE
+				this.gameState.phase === GAME_PHASE.END
 					? {
-							text: 'New round',
+							text: 'Új kör',
 							action: this.nextRound,
 					  }
 					: {
-							text: 'Skip this round',
+							text: 'Kör átugrása',
 							action: () => {
 								this.showDialog(Dialogs.SKIP_ROUND);
 							},
 					  };
 			return [
 				{
-					text: this.promptVisible ? 'Hide prompt' : 'Show prompt',
+					text: this.promptVisible ? 'Kategória elrejtése' : 'Kategória megjelenítése',
 					action: this.togglePrompt,
 				},
 				{
-					text: this.sfxDisabled ? 'Unmute sound' : 'Mute sound',
+					text: this.sfxDisabled ? 'Hangok be' : 'Hangok ki',
 					action: this.toggleSfx,
 				},
 				{
-					text: 'Game status',
+					text: 'Szoba információk',
 					action: () => {
 						this.showDialog(Dialogs.ROOM_INFO);
 					},
@@ -405,7 +436,7 @@ export default {
 				},
 				nextRoundOption,
 				{
-					text: 'Exit to setup',
+					text: 'Kilépés a létrehozás menübe',
 					action: () => {
 						this.showDialog(Dialogs.SETUP);
 					},

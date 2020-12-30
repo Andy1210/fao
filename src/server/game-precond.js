@@ -29,7 +29,7 @@ const GamePrecond = {
 	},
 	roomExists(roomCode) {
 		if (Lobby.getRoomByCode(roomCode) === undefined) {
-			throw new GameError(`Rm${roomCode} DNE`, 'This room is unavailable');
+			throw new GameError(`Rm${roomCode} DNE`, 'A szoba nem létezik');
 		}
 	},
 	gameInProgress(room) {
@@ -39,12 +39,12 @@ const GamePrecond = {
 	},
 	gameNotInProgress(room) {
 		if (room.isGameInProgress()) {
-			throw new GameError(`Rm${room.roomCode} A game is already in progress`);
+			throw new GameError(`Szoba: ${room.roomCode} - Már folyamatban van egy játék`);
 		}
 	},
 	roomIsNotFull(room) {
 		if (room.isFull()) {
-			throw new GameError(`Rm${room.roomCode} is full`, 'This room is full', true);
+			throw new GameError(`Szoba: ${room.roomCode} tele van`, 'A szoba tele van', true);
 		}
 	},
 	lobbyIsNotFull() {
@@ -61,8 +61,8 @@ const GamePrecond = {
 	nameIsNotTakenInRoom(username, room) {
 		if (room.findUser(username)) {
 			throw new GameError(
-				`Username ${username} is taken in Rm${room.roomCode}`,
-				'This username is taken in this room'
+				`A ${username} felhasználónév foglalt a ${room.roomCode} szobában`,
+				'A felhasználónév folgalt a megadott szobában'
 			);
 		}
 	},

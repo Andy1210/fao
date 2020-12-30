@@ -2,12 +2,14 @@ import { validateUsername } from '../common/util.js';
 
 class User {
 	constructor(socket, name) {
-		if(!validateUsername(name)) {
+		if (!validateUsername(name)) {
 			return undefined;
 		}
 
 		this.socket = socket;
 		this.name = name;
+		this.isVoted = false;
+		this.votes = 0;
 		this.gameRoom = undefined; // TODO currently this references the room obj. Change this to just the code, to avoid circular refs
 	}
 

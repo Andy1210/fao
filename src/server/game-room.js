@@ -54,8 +54,31 @@ class GameRoom {
 		return this.users.find((p) => p.name === name);
 	}
 
+	addVote(user, votedUser) {
+		const userData = this.findUser(user);
+		if (userData.isVoted) {
+			return false;
+		}
+		userData.isVoted = true;
+		const votedUserData = this.findUser(votedUser);
+		if (votedUserData) {
+			votedUserData.votes += 1;
+		}
+		return true;
+	}
+
+	isEveryoneVoted() {
+		const connectedUsers = this.users.filter((u) => u.connected);
+		const isEveryoneVoted = _.every(connectedUsers, (u) => u.isVoted);
+		if (isEveryoneVoted) {
+			this.phase = GAME_PHASE.END;
+		}
+		return isEveryoneVoted;
+	}
+
 	startNewRound() {
 		this.round++;
+		this.resetUsers();
 		this.shuffleUsers();
 		this.phase = GAME_PHASE.PLAY;
 		this.turn = 1;
@@ -84,6 +107,12 @@ class GameRoom {
 		}
 		return undefined;
 	}
+	resetUsers() {
+		this.users.forEach((user) => {
+			user.isVoted = false;
+			user.votes = 0;
+		});
+	}
 	shuffleUsers() {
 		Util.shuffle(this.users);
 	}
@@ -103,7 +132,11 @@ class GameRoom {
 		return undefined;
 	}
 	isGameInProgress() {
-		return this.phase === GAME_PHASE.PLAY || this.phase === GAME_PHASE.VOTE;
+		return (
+			this.phase === GAME_PHASE.PLAY ||
+			this.phase === GAME_PHASE.VOTE ||
+			this.phase === GAME_PHASE.END
+		);
 	}
 	isFull() {
 		return this.users.length >= MAX_USERS;
@@ -121,6 +154,8 @@ const ClientAdapter = {
 			users: _.map(gameRoom.users, (u) => ({
 				name: u.name,
 				connected: u.connected,
+				isVoted: u.isVoted,
+				votes: u.votes,
 			})),
 			round: gameRoom.round,
 			phase: gameRoom.phase,

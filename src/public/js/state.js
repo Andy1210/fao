@@ -49,7 +49,8 @@ const Store = {
 			this.setView(VIEW.SETUP);
 		} else if (
 			this.state.gameState.phase === GAME_PHASE.PLAY ||
-			this.state.gameState.phase === GAME_PHASE.VOTE
+			this.state.gameState.phase === GAME_PHASE.VOTE ||
+			this.state.gameState.phase === GAME_PHASE.END
 		) {
 			this.setView(VIEW.GAME);
 		}
@@ -72,6 +73,7 @@ const Store = {
 	submitLeaveGame,
 	submitStartGame,
 	submitStroke,
+	submitVote,
 	submitNextRound,
 	submitReturnToSetup,
 };
@@ -131,9 +133,10 @@ handleSocket(MESSAGE.USER_LEFT);
 handleSocket(MESSAGE.START_GAME);
 handleSocket(MESSAGE.NEW_TURN);
 handleSocket(MESSAGE.RETURN_TO_SETUP);
+handleSocket(MESSAGE.EVERYONE_VOTED);
 
 const usernameValidationWarning =
-	'Username must be 1-15 characters long, and can only contain alphanumerics and spaces';
+	'A felhasználónév csak betűket, számokat és szóközt tartalmazhat. Maximum 15 karakter hosszú lehet.';
 function submitCreateGame(username) {
 	username = username.trim();
 	if (validateUsername(username)) {
@@ -170,6 +173,11 @@ function submitStartGame() {
 function submitStroke(points) {
 	socket.emit(MESSAGE.SUBMIT_STROKE, {
 		points: points,
+	});
+}
+function submitVote(username) {
+	socket.emit(MESSAGE.SUBMIT_VOTE, {
+		username: username,
 	});
 }
 function submitNextRound() {

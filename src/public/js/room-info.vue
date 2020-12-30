@@ -1,7 +1,7 @@
 <template>
 	<dialog-component id="room-info">
 		<div id="room-info-code">
-			<h2>Code: {{ roomCode }}</h2>
+			<h2>Kód: {{ roomCode }}</h2>
 		</div>
 		<div id="player-statuses">
 			<PlayerStatusesList :users="users" />
@@ -9,7 +9,7 @@
 
 		<template #actions>
 			<div>
-				<button class="btn secondary" @click="$emit('close')">Close</button>
+				<button class="btn secondary" @click="$emit('close')">Bezárás</button>
 			</div>
 		</template>
 	</dialog-component>
@@ -32,14 +32,6 @@ export default {
 		},
 		users: {
 			type: Array,
-		},
-	},
-	methods: {
-		color(user) {
-			return Store.state.gameState.getUserColor(user.name);
-		},
-		connectionStatusString(user) {
-			return user.connected ? '' : 'Disconnected';
 		},
 	},
 };

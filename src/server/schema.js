@@ -71,6 +71,16 @@ SCHEMA[MESSAGE.SUBMIT_STROKE] = {
 	required: ['points'],
 };
 
+SCHEMA[MESSAGE.SUBMIT_VOTE] = {
+	$id: MESSAGE.SUBMIT_VOTE,
+	properties: {
+		username: {
+			type: 'string',
+		},
+	},
+	required: ['username'],
+};
+
 for (let schema of Object.values(SCHEMA)) {
 	ajv.addSchema(schema, schema.$id);
 }

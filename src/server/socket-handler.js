@@ -55,9 +55,10 @@ const MessageHandlers = {
 		GamePrecond.roomExists(data.roomCode);
 
 		let user;
-		const nameExistsInRoom = roomToJoin.findUser(data.username) !== undefined;
+		const userData = roomToJoin.findUser(data.username);
+		const nameExistsInRoom = userData !== undefined;
 
-		if (nameExistsInRoom) {
+		if (nameExistsInRoom && !userData.connected) {
 			// rejoin
 			GamePrecond.nameIsTakenInRoom(data.username, roomToJoin);
 			GamePrecond.gameInProgress(roomToJoin);
@@ -66,8 +67,8 @@ const MessageHandlers = {
 		} else {
 			// join for first time
 			GamePrecond.roomIsNotFull(roomToJoin);
-			GamePrecond.gameNotInProgress(roomToJoin);
 			GamePrecond.nameIsNotTakenInRoom(data.username, roomToJoin);
+			GamePrecond.gameNotInProgress(roomToJoin);
 			user = login(sock, data.username);
 			joinRoom(user, roomToJoin, false, false);
 		}
@@ -114,6 +115,22 @@ const MessageHandlers = {
 		rm.nextTurn();
 
 		broadcastRoomState(io, rm, MESSAGE.NEW_TURN);
+	},
+
+	[MESSAGE.SUBMIT_VOTE](io, sock, data) {
+		GamePrecond.sockHasUser(sock);
+		GamePrecond.userIsInARoom(sock.user);
+		GamePrecond.gameInProgress(sock.user.gameRoom);
+		let rm = sock.user.gameRoom;
+		rm.addVote(sock.user.name, data.username);
+		const isEveryoneVoted = rm.isEveryoneVoted();
+
+		console.log('Add Vote', sock.user.name, data.username);
+
+		if (isEveryoneVoted) {
+			console.log('Everyone voted');
+			broadcastRoomState(io, rm, MESSAGE.EVERYONE_VOTED);
+		}
 	},
 
 	[MESSAGE.RETURN_TO_SETUP](io, sock, data) {
@@ -216,7 +233,11 @@ function broadcastRoomState(io, room, messageName, addtlProcessFn) {
 		}
 
 		let res;
-		if (room.phase === GAME_PHASE.PLAY || room.phase === GAME_PHASE.VOTE) {
+		if (
+			room.phase === GAME_PHASE.PLAY ||
+			room.phase === GAME_PHASE.VOTE ||
+			room.phase === GAME_PHASE.END
+		) {
 			res = {
 				roomState: room.faker && room.faker.name === u.name ? fakerView : artistView,
 			};

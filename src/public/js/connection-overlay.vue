@@ -1,6 +1,6 @@
 <template>
 	<div id="conn-overlay" class="flex-center" v-show="!connected">
-		<div id="reconnecting-message">{{message}}</div>
+		<div id="reconnecting-message">{{ message }}</div>
 	</div>
 </template>
 
@@ -22,11 +22,11 @@ export default {
 			return this.gameConnection === CONNECTION_STATE.CONNECT;
 		},
 		message() {
-			if(Store.state.joinWarning) {
-				return 'Reconnection failure: ' + Store.state.joinWarning;
+			if (Store.state.joinWarning) {
+				return 'Hiba a csatlakozáskor: ' + Store.state.joinWarning;
 			}
-			return 'Reconnecting...';
-		}
+			return 'Csatlakozás...';
+		},
 	},
 };
 </script>

@@ -21,11 +21,11 @@ export default {
 	props: {
 		cancelText: {
 			type: String,
-			default: 'Cancel',
+			default: 'Mégsem',
 		},
 		confirmText: {
 			type: String,
-			default: 'Confirm',
+			default: 'OK',
 		},
 	},
 };
